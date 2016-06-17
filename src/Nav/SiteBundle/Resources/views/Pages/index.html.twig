@@ -62,29 +62,23 @@
 
                 <section id="about">
                     <div class="tm-content-box flex-2-col">
-                        
+
                         <div class="pad flex-item tm-team-description-container">
                             <h2 class="tm-section-title">About me</h2>
-                            <p class="tm-section-description">
-                              My full name is Navarajh Appaiya, but everyone calls me Nav. Born in Jaffna, Sri Lanka, but grew up in the Netherlands as a Dutch guy. 
+                                {{ about.content|raw }}
+                        </div>
 
-</p>
-                            <p class="tm-section-description">Love to work on the backend of any application or website to make it better, faster, or more secure. Mainly working with PHP & Frameworks, but also like to get deep into other new languages as well.</p>    
-                        </div>
                         <div class="flex-item">
-                            <img src="{{ asset('bundles/navsite/img/about.png') }}" alt="about me">
+                            <img src="{{ asset(about.image) }}" alt="about me">
                         </div>
-                        
 
                     </div>
-
-                    
                 </section>
 
                 <!-- slider -->
                 <section id="projects">
                     <div id="tmCarousel" class="carousel slide tm-content-box" data-ride="carousel">
-
+                        <h2 class="tm-section-title">Projects</h2>
                         <ol class="carousel-indicators">
                             <li data-target="#tmCarousel" data-slide-to="0" class="active"></li>
                             <li data-target="#tmCarousel" data-slide-to="1" class=""></li>
@@ -92,37 +86,21 @@
                         </ol>
 
                         <div class="carousel-inner" role="listbox">
-                        
-                            <div class="carousel-item active">
+                            {% for project in projects %}
+                            <div class="carousel-item{% if loop.first %} active{% endif %}">
                                 <div class="carousel-content">
                                     <div class="flex-item">
-                                        <h2 class="tm-section-title">Gists with Github API v3</h2>
-                                        <p class="tm-section-description carousel-description">I like to keep usefull code together at my gists repository on github. So just to give you a peek view into them, i've used the github API v3 for fetching my gists and list them out here for you.
-                                        </p>
-                                    </div>
-                                </div>                               
-                            </div>
-
-                            <div class="carousel-item">
-                                <div class="carousel-content">
-                                    <div class="flex-item">
-                                        <h2 class="tm-section-title">Get to my code on Github</h2>
-                                        <p class="tm-section-description carousel-description">If you want to check out more about me, please feel free to sniff through my code on
-                                            <a href="http://github.com/nav-appaiya">github</a>.</p>
-                                    </div>
-                                </div>                                
-                            </div>
-
-                            <div class="carousel-item">
-                                <div class="carousel-content">
-                                    <div class="flex-item">
-                                        <h2 class="tm-section-title">Citygis Portal school project</h2>
+                                        <h5 class="tm-section-title">{{ project.title }}</h5>
                                         <p class="tm-section-description carousel-description">
-                                           This app provides the interface to the citygis database through my API, build using the django rest framework. This API is live and running at port 8000. Build for my school project56 citygis.
-                                        </p>
+                                            {{ project.description }}
+                                            <br>
+                                            <br>
+                                            <a href="{{ project.link }}">More about this project</a>.</p>
                                     </div>
                                 </div>                                
                             </div>
+                            {% endfor %}
+
 
                         </div>
                         
@@ -133,24 +111,47 @@
                     <img src="{{ asset('bundles/navsite/img/bg.jpg') }}" alt="Contact image" class="img-fluid">
                     <div id="contact" class="pad">
                         <h2 class="tm-section-title">Contact Me</h2>
-                        <form action="#contact" method="get" class="contact-form">
+                        {% if app.session.flashBag.has('success') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('success') %}
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
+                        {{ form_start(contactForm, {'attr': {
+                            'method' : 'get',
+                            'class' : 'contact-form'
+                        }}) }}
                             <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group-2-col-left">
-                                <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="Name"  required/>
+                                {{ form_widget(contactForm.name, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder' : 'Name'
+                                }}) }}
                             </div>
-                            <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group-2-col-right">
-                                <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="Email"  required/>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="Subject"  required/>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="Message" required></textarea>
-                            </div>
-                            
-                            <button type="submit" id="contact-submit" class="btn btn-primary submit-btn">Submit</button>
-
-                        </form>      
+                        <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group-2-col-right">
+                            {{ form_widget(contactForm.email, {'attr': {
+                                'class': 'form-control',
+                                'placeholder' : 'Email',
+                            }}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(contactForm.subject, {'attr': {
+                                'class': 'form-control',
+                                'placeholder' : 'Subject',
+                            }}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(contactForm.message, {'attr': {
+                                'class': 'form-control',
+                                'placeholder' : 'Message or question you want to ask me...',
+                                'rows' : 4
+                            }}) }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" id="contact-submit" class="btn btn-primary submit-btn btn-xs">Submit</button>
+                        </div>
+                        {{ form_end(contactForm) }}
                     </div>
                     
                 </section>  
@@ -183,7 +184,7 @@
 		        chk: 'd8dac51357e3ae317b493f0faa64c1be',
 		        overrideOptions: {}
 		    };
-		
+
 		    (function() {var tt = document.createElement('script'), s = document.getElementsByTagName('script')[0]; tt.setAttribute('type', 'text/javascript'); tt.setAttribute('src', (document.location.protocol == 'https:' ? 'https' : 'http') + '://tm.tradetracker.net/tag?t=' + _TradeTrackerTagOptions.t + '&amp;s=' + _TradeTrackerTagOptions.s + '&amp;chk=' + _TradeTrackerTagOptions.chk); s.parentNode.insertBefore(tt, s);})();
 		</script>
 		<!-- End TradeTracker SuperTag Code -->

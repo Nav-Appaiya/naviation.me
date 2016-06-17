@@ -1,3 +1,7 @@
-nav_site_homepage:
+nav_site:
     path:     /
     defaults: { _controller: NavSiteBundle:Page:index }
+
+nav_site_test:
+    path:     /test
+    defaults: { _controller: NavSiteBundle:Page:test }

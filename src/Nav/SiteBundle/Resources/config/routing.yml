@@ -1,0 +1,3 @@
+nav_site_homepage:
+    path:     /
+    defaults: { _controller: NavSiteBundle:Page:index }
